@@ -15,9 +15,8 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 )
 
-// JSONPb is a Marshaler which marshals/unmarshals into/from JSON
-// with the "github.com/gogo/protobuf/jsonpb".
-// It supports fully functionality of protobuf unlike JSONBuiltin.
+// JSONPb is a runtime.Marshaler which marshals/unmarshals into/from
+// JSON with "github.com/gogo/protobuf/jsonpb".
 type JSONPb jsonpb.Marshaler
 
 // ContentType always returns "application/json".
@@ -25,14 +24,11 @@ func (*JSONPb) ContentType() string {
 	return "application/json"
 }
 
-// Marshal marshals "v" into JSON
-// Currently it can marshal only proto.Message.
-// TODO(yugui) Support fields of primitive types in a message.
+// Marshal marshals "v" into JSON.
 func (j *JSONPb) Marshal(v interface{}) ([]byte, error) {
 	if _, ok := v.(proto.Message); !ok {
 		return j.marshalNonProtoField(v)
 	}
-
 	var buf bytes.Buffer
 	if err := j.marshalTo(&buf, v); err != nil {
 		return nil, err
@@ -87,8 +83,9 @@ func (j *JSONPb) marshalNonProtoField(v interface{}) ([]byte, error) {
 	return json.Marshal(rv.Interface())
 }
 
-// Unmarshal unmarshals JSON "data" into "v"
-// Currently it can marshal only proto.Message.
+// Unmarshal unmarshals JSON "data" into "v".
+// Currently it can only marshal proto.Message.
+//
 // TODO(yugui) Support fields of primitive types in a message.
 func (j *JSONPb) Unmarshal(data []byte, v interface{}) error {
 	return unmarshalJSONPb(data, v)
@@ -142,7 +139,6 @@ func decodeNonProtoField(d *json.Decoder, v interface{}) error {
 		if !ok {
 			return fmt.Errorf("unsupported type of map field key: %v", rv.Type().Key())
 		}
-
 		m := make(map[string]*json.RawMessage)
 		if err := d.Decode(&m); err != nil {
 			return err

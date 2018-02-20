@@ -11,9 +11,6 @@ Package gogomarshal contains marshaling code extracted from
 github.com/grpc-ecosystem/grpc-gateway/runtime and altered
 to depend on gogo versions of the proto and jsonpb packages.
 
-
-
-
 ## <a name="pkg-index">Index</a>
 * [type JSONPb](#JSONPb)
   * [func (*JSONPb) ContentType() string](#JSONPb.ContentType)
@@ -23,159 +20,102 @@ to depend on gogo versions of the proto and jsonpb packages.
   * [func (j *JSONPb) NewEncoder(w io.Writer) runtime.Encoder](#JSONPb.NewEncoder)
   * [func (j *JSONPb) Unmarshal(data []byte, v interface{}) error](#JSONPb.Unmarshal)
 * [type Proto](#Proto)
-  * [func (*Proto) ContentType() string](#Proto.ContentType)
+  * [func (p *Proto) ContentType() string](#Proto.ContentType)
   * [func (*Proto) Marshal(value interface{}) ([]byte, error)](#Proto.Marshal)
-  * [func (marshaller *Proto) NewDecoder(reader io.Reader) runtime.Decoder](#Proto.NewDecoder)
-  * [func (marshaller *Proto) NewEncoder(writer io.Writer) runtime.Encoder](#Proto.NewEncoder)
+  * [func (p *Proto) NewDecoder(reader io.Reader) runtime.Decoder](#Proto.NewDecoder)
+  * [func (p *Proto) NewEncoder(writer io.Writer) runtime.Encoder](#Proto.NewEncoder)
   * [func (*Proto) Unmarshal(data []byte, value interface{}) error](#Proto.Unmarshal)
 
-
 #### <a name="pkg-files">Package files</a>
-[jsonpb.go](/jsonpb.go) [protopb.go](/src/github.com/abursavich/gogomarshal/protopb.go) 
+[jsonpb.go](/jsonpb.go) [proto.go](/proto.go) 
 
-
-
-
-
-
-## <a name="JSONPb">type</a> [JSONPb](/jsonpb.go?s=572:600#L21)
+## <a name="JSONPb">type</a> [JSONPb](/jsonpb.go?s=509:537#L20)
 ``` go
 type JSONPb jsonpb.Marshaler
 ```
-JSONPb is a Marshaler which marshals/unmarshals into/from JSON
-with the "github.com/gogo/protobuf/jsonpb".
-It supports fully functionality of protobuf unlike JSONBuiltin.
+JSONPb is a runtime.Marshaler which marshals/unmarshals into/from
+JSON with "github.com/gogo/protobuf/jsonpb".
 
-
-
-
-
-
-
-
-
-
-### <a name="JSONPb.ContentType">func</a> (\*JSONPb) [ContentType](/jsonpb.go?s=652:687#L24)
+### <a name="JSONPb.ContentType">func</a> (\*JSONPb) [ContentType](/jsonpb.go?s=589:624#L23)
 ``` go
 func (*JSONPb) ContentType() string
 ```
 ContentType always returns "application/json".
 
-
-
-
-### <a name="JSONPb.Delimiter">func</a> (\*JSONPb) [Delimiter](/jsonpb.go?s=5464:5499#L191)
+### <a name="JSONPb.Delimiter">func</a> (\*JSONPb) [Delimiter](/jsonpb.go?s=5293:5328#L187)
 ``` go
 func (j *JSONPb) Delimiter() []byte
 ```
 Delimiter for newline encoded JSON streams.
 
-
-
-
-### <a name="JSONPb.Marshal">func</a> (\*JSONPb) [Marshal](/jsonpb.go?s=865:920#L31)
+### <a name="JSONPb.Marshal">func</a> (\*JSONPb) [Marshal](/jsonpb.go?s=692:747#L28)
 ``` go
 func (j *JSONPb) Marshal(v interface{}) ([]byte, error)
 ```
-Marshal marshals "v" into JSON
-Currently it can marshal only proto.Message.
-TODO(yugui) Support fields of primitive types in a message.
+Marshal marshals "v" into JSON.
 
-
-
-
-### <a name="JSONPb.NewDecoder">func</a> (\*JSONPb) [NewDecoder](/jsonpb.go?s=2804:2860#L98)
+### <a name="JSONPb.NewDecoder">func</a> (\*JSONPb) [NewDecoder](/jsonpb.go?s=2634:2690#L95)
 ``` go
 func (j *JSONPb) NewDecoder(r io.Reader) runtime.Decoder
 ```
 NewDecoder returns a runtime.Decoder which reads JSON stream from "r".
 
-
-
-
-### <a name="JSONPb.NewEncoder">func</a> (\*JSONPb) [NewEncoder](/jsonpb.go?s=3044:3100#L104)
+### <a name="JSONPb.NewEncoder">func</a> (\*JSONPb) [NewEncoder](/jsonpb.go?s=2874:2930#L101)
 ``` go
 func (j *JSONPb) NewEncoder(w io.Writer) runtime.Encoder
 ```
 NewEncoder returns an Encoder which writes JSON stream into "w".
 
-
-
-
-### <a name="JSONPb.Unmarshal">func</a> (\*JSONPb) [Unmarshal](/jsonpb.go?s=2631:2691#L93)
+### <a name="JSONPb.Unmarshal">func</a> (\*JSONPb) [Unmarshal](/jsonpb.go?s=2461:2521#L90)
 ``` go
 func (j *JSONPb) Unmarshal(data []byte, v interface{}) error
 ```
-Unmarshal unmarshals JSON "data" into "v"
-Currently it can marshal only proto.Message.
+Unmarshal unmarshals JSON "data" into "v".
+Currently it can only marshal proto.Message.
+
 TODO(yugui) Support fields of primitive types in a message.
 
-
-
-
-## <a name="Proto">type</a> [Proto](/protopb.go?s=231:250#L14)
+## <a name="Proto">type</a> [Proto](/proto.go?s=241:380#L14)
 ``` go
-type Proto struct{}
+type Proto struct {
+    // CustomContentType overrides the default Content-Type
+    // of "application/octet-stream".
+    CustomContentType string
+}
 ```
-Proto is a Marshaller which marshals/unmarshals into/from serialize proto bytes
+Proto is a runtime.Marshaller which marshals/unmarshals into/from serialize
+proto bytes
 
-
-
-
-
-
-
-
-
-
-### <a name="Proto.ContentType">func</a> (\*Proto) [ContentType](/protopb.go?s=310:344#L17)
+### <a name="Proto.ContentType">func</a> (\*Proto) [ContentType](/proto.go?s=496:532#L22)
 ``` go
-func (*Proto) ContentType() string
+func (p *Proto) ContentType() string
 ```
-ContentType always returns "application/octet-stream".
+ContentType returns the Content-Type.
+If CustomContentType is empty, it returns "application/octet-stream".
 
-
-
-
-### <a name="Proto.Marshal">func</a> (\*Proto) [Marshal](/protopb.go?s=424:480#L22)
+### <a name="Proto.Marshal">func</a> (\*Proto) [Marshal](/proto.go?s=676:732#L30)
 ``` go
 func (*Proto) Marshal(value interface{}) ([]byte, error)
 ```
 Marshal marshals "value" into Proto
 
-
-
-
-### <a name="Proto.NewDecoder">func</a> (\*Proto) [NewDecoder](/protopb.go?s=968:1037#L40)
+### <a name="Proto.NewDecoder">func</a> (\*Proto) [NewDecoder](/proto.go?s=1220:1280#L48)
 ``` go
-func (marshaller *Proto) NewDecoder(reader io.Reader) runtime.Decoder
+func (p *Proto) NewDecoder(reader io.Reader) runtime.Decoder
 ```
 NewDecoder returns a Decoder which reads proto stream from "reader".
 
-
-
-
-### <a name="Proto.NewEncoder">func</a> (\*Proto) [NewEncoder](/protopb.go?s=1302:1371#L51)
+### <a name="Proto.NewEncoder">func</a> (\*Proto) [NewEncoder](/proto.go?s=1536:1596#L59)
 ``` go
-func (marshaller *Proto) NewEncoder(writer io.Writer) runtime.Encoder
+func (p *Proto) NewEncoder(writer io.Writer) runtime.Encoder
 ```
 NewEncoder returns an Encoder which writes proto stream into "writer".
 
-
-
-
-### <a name="Proto.Unmarshal">func</a> (\*Proto) [Unmarshal](/protopb.go?s=680:741#L31)
+### <a name="Proto.Unmarshal">func</a> (\*Proto) [Unmarshal](/proto.go?s=932:993#L39)
 ``` go
 func (*Proto) Unmarshal(data []byte, value interface{}) error
 ```
 Unmarshal unmarshals proto "data" into "value"
-
-
-
-
-
-
-
 
 - - -
 Generated by [godoc2md](http://godoc.org/github.com/davecheney/godoc2md)

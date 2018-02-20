@@ -1,20 +1,28 @@
 package gogomarshal
 
 import (
-	"io"
-
 	"errors"
+	"io"
 	"io/ioutil"
 
 	"github.com/gogo/protobuf/proto"
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 )
 
-// Proto is a Marshaller which marshals/unmarshals into/from serialize proto bytes
-type Proto struct{}
+// Proto is a runtime.Marshaller which marshals/unmarshals into/from serialize
+// proto bytes
+type Proto struct {
+	// CustomContentType overrides the default Content-Type
+	// of "application/octet-stream".
+	CustomContentType string
+}
 
-// ContentType always returns "application/octet-stream".
-func (*Proto) ContentType() string {
+// ContentType returns the Content-Type.
+// If CustomContentType is empty, it returns "application/octet-stream".
+func (p *Proto) ContentType() string {
+	if p.CustomContentType != "" {
+		return p.CustomContentType
+	}
 	return "application/octet-stream"
 }
 
@@ -37,20 +45,20 @@ func (*Proto) Unmarshal(data []byte, value interface{}) error {
 }
 
 // NewDecoder returns a Decoder which reads proto stream from "reader".
-func (marshaller *Proto) NewDecoder(reader io.Reader) runtime.Decoder {
+func (p *Proto) NewDecoder(reader io.Reader) runtime.Decoder {
 	return runtime.DecoderFunc(func(value interface{}) error {
 		buffer, err := ioutil.ReadAll(reader)
 		if err != nil {
 			return err
 		}
-		return marshaller.Unmarshal(buffer, value)
+		return p.Unmarshal(buffer, value)
 	})
 }
 
 // NewEncoder returns an Encoder which writes proto stream into "writer".
-func (marshaller *Proto) NewEncoder(writer io.Writer) runtime.Encoder {
+func (p *Proto) NewEncoder(writer io.Writer) runtime.Encoder {
 	return runtime.EncoderFunc(func(value interface{}) error {
-		buffer, err := marshaller.Marshal(value)
+		buffer, err := p.Marshal(value)
 		if err != nil {
 			return err
 		}
@@ -58,7 +66,6 @@ func (marshaller *Proto) NewEncoder(writer io.Writer) runtime.Encoder {
 		if err != nil {
 			return err
 		}
-
 		return nil
 	})
 }
