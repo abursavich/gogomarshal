@@ -31,14 +31,14 @@ to depend on gogo versions of the proto and jsonpb packages.
 
 
 #### <a name="pkg-files">Package files</a>
-[jsonpb.go](/src/github.com/abursavich/gogomarshal/jsonpb.go) [protopb.go](/src/github.com/abursavich/gogomarshal/protopb.go) 
+[jsonpb.go](/jsonpb.go) [protopb.go](/src/github.com/abursavich/gogomarshal/protopb.go) 
 
 
 
 
 
 
-## <a name="JSONPb">type</a> [JSONPb](/src/target/jsonpb.go?s=572:600#L21)
+## <a name="JSONPb">type</a> [JSONPb](/jsonpb.go?s=572:600#L21)
 ``` go
 type JSONPb jsonpb.Marshaler
 ```
@@ -55,7 +55,7 @@ It supports fully functionality of protobuf unlike JSONBuiltin.
 
 
 
-### <a name="JSONPb.ContentType">func</a> (\*JSONPb) [ContentType](/src/target/jsonpb.go?s=652:687#L24)
+### <a name="JSONPb.ContentType">func</a> (\*JSONPb) [ContentType](/jsonpb.go?s=652:687#L24)
 ``` go
 func (*JSONPb) ContentType() string
 ```
@@ -64,7 +64,7 @@ ContentType always returns "application/json".
 
 
 
-### <a name="JSONPb.Delimiter">func</a> (\*JSONPb) [Delimiter](/src/target/jsonpb.go?s=5464:5499#L191)
+### <a name="JSONPb.Delimiter">func</a> (\*JSONPb) [Delimiter](/jsonpb.go?s=5464:5499#L191)
 ``` go
 func (j *JSONPb) Delimiter() []byte
 ```
@@ -73,7 +73,7 @@ Delimiter for newline encoded JSON streams.
 
 
 
-### <a name="JSONPb.Marshal">func</a> (\*JSONPb) [Marshal](/src/target/jsonpb.go?s=865:920#L31)
+### <a name="JSONPb.Marshal">func</a> (\*JSONPb) [Marshal](/jsonpb.go?s=865:920#L31)
 ``` go
 func (j *JSONPb) Marshal(v interface{}) ([]byte, error)
 ```
@@ -84,7 +84,7 @@ TODO(yugui) Support fields of primitive types in a message.
 
 
 
-### <a name="JSONPb.NewDecoder">func</a> (\*JSONPb) [NewDecoder](/src/target/jsonpb.go?s=2804:2860#L98)
+### <a name="JSONPb.NewDecoder">func</a> (\*JSONPb) [NewDecoder](/jsonpb.go?s=2804:2860#L98)
 ``` go
 func (j *JSONPb) NewDecoder(r io.Reader) runtime.Decoder
 ```
@@ -93,7 +93,7 @@ NewDecoder returns a runtime.Decoder which reads JSON stream from "r".
 
 
 
-### <a name="JSONPb.NewEncoder">func</a> (\*JSONPb) [NewEncoder](/src/target/jsonpb.go?s=3044:3100#L104)
+### <a name="JSONPb.NewEncoder">func</a> (\*JSONPb) [NewEncoder](/jsonpb.go?s=3044:3100#L104)
 ``` go
 func (j *JSONPb) NewEncoder(w io.Writer) runtime.Encoder
 ```
@@ -102,7 +102,7 @@ NewEncoder returns an Encoder which writes JSON stream into "w".
 
 
 
-### <a name="JSONPb.Unmarshal">func</a> (\*JSONPb) [Unmarshal](/src/target/jsonpb.go?s=2631:2691#L93)
+### <a name="JSONPb.Unmarshal">func</a> (\*JSONPb) [Unmarshal](/jsonpb.go?s=2631:2691#L93)
 ``` go
 func (j *JSONPb) Unmarshal(data []byte, v interface{}) error
 ```
@@ -113,7 +113,7 @@ TODO(yugui) Support fields of primitive types in a message.
 
 
 
-## <a name="Proto">type</a> [Proto](/src/target/protopb.go?s=231:250#L14)
+## <a name="Proto">type</a> [Proto](/protopb.go?s=231:250#L14)
 ``` go
 type Proto struct{}
 ```
@@ -128,7 +128,7 @@ Proto is a Marshaller which marshals/unmarshals into/from serialize proto bytes
 
 
 
-### <a name="Proto.ContentType">func</a> (\*Proto) [ContentType](/src/target/protopb.go?s=310:344#L17)
+### <a name="Proto.ContentType">func</a> (\*Proto) [ContentType](/protopb.go?s=310:344#L17)
 ``` go
 func (*Proto) ContentType() string
 ```
@@ -137,7 +137,7 @@ ContentType always returns "application/octet-stream".
 
 
 
-### <a name="Proto.Marshal">func</a> (\*Proto) [Marshal](/src/target/protopb.go?s=424:480#L22)
+### <a name="Proto.Marshal">func</a> (\*Proto) [Marshal](/protopb.go?s=424:480#L22)
 ``` go
 func (*Proto) Marshal(value interface{}) ([]byte, error)
 ```
@@ -146,7 +146,7 @@ Marshal marshals "value" into Proto
 
 
 
-### <a name="Proto.NewDecoder">func</a> (\*Proto) [NewDecoder](/src/target/protopb.go?s=968:1037#L40)
+### <a name="Proto.NewDecoder">func</a> (\*Proto) [NewDecoder](/protopb.go?s=968:1037#L40)
 ``` go
 func (marshaller *Proto) NewDecoder(reader io.Reader) runtime.Decoder
 ```
@@ -155,7 +155,7 @@ NewDecoder returns a Decoder which reads proto stream from "reader".
 
 
 
-### <a name="Proto.NewEncoder">func</a> (\*Proto) [NewEncoder](/src/target/protopb.go?s=1302:1371#L51)
+### <a name="Proto.NewEncoder">func</a> (\*Proto) [NewEncoder](/protopb.go?s=1302:1371#L51)
 ``` go
 func (marshaller *Proto) NewEncoder(writer io.Writer) runtime.Encoder
 ```
@@ -164,7 +164,7 @@ NewEncoder returns an Encoder which writes proto stream into "writer".
 
 
 
-### <a name="Proto.Unmarshal">func</a> (\*Proto) [Unmarshal](/src/target/protopb.go?s=680:741#L31)
+### <a name="Proto.Unmarshal">func</a> (\*Proto) [Unmarshal](/protopb.go?s=680:741#L31)
 ``` go
 func (*Proto) Unmarshal(data []byte, value interface{}) error
 ```
